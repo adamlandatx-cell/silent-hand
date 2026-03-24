@@ -332,3 +332,24 @@
 </script>
 </body>
 </html>
+  function reset() {
+    document.getElementById("success-screen").classList.add("hidden");
+    document.getElementById("main-screen").classList.remove("hidden");
+    document.getElementById("btn-donate").disabled = false;
+    updateDisplay();
+  }
+
+  function showError(msg) {
+    const existing = document.querySelector(".error-toast");
+    if (existing) existing.remove();
+    const toast = document.createElement("div");
+    toast.className = "error-toast";
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  updateDisplay();
+</script>
+</body>
+</html>
