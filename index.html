@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Silent Hand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --green-deep: #14332A;
+      --green-dark: #1B4332;
+      --green-mid: #2D6A4F;
+      --green-light: #52B788;
+      --green-pale: #D8F3DC;
+      --green-bg: #F0F7F4;
+      --cream: #FDFCFA;
+      --text: #1A1A1A;
+      --text-mid: #555;
+      --text-light: #888;
+      --gold: #D4A843;
+      --gold-hover: #C49B3A;
+      --red: #DC3545;
+      --radius: 16px;
+    }
+    body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--cream); color: var(--text); min-height: 100dvh; overflow-x: hidden; }
+    .app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding: 0 20px; }
+    .topbar { display: flex; align-items: center; justify-content: center; padding: 16px 0 8px; gap: 10px; }
+    .topbar-dot { width: 8px; height: 8px; background: var(--green-light); border-radius: 50%; animation: pulse 2s ease infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .topbar span { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--green-mid); }
+    .hero { text-align: center; padding: 24px 0 32px; }
+    .hero-logo { width: 56px; height: 56px; background: var(--green-dark); border-radius: 14px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(27,67,50,0.3); }
+    .hero-logo svg { width: 28px; height: 28px; }
+    .hero h1 { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--green-dark); margin-bottom: 6px; }
+    .hero p { font-size: 14px; color: var(--text-light); max-width: 300px; margin: 0 auto; line-height: 1.5; }
+    .tx-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 16px; border: 1px solid rgba(0,0,0,0.04); }
+    .tx-header { background: var(--green-bg); padding: 14px 20px; display: flex; align-items: center; gap: 8px; }
+    .tx-header-dot { width: 6px; height: 6px; background: var(--green-light); border-radius: 50%; }
+    .tx-header span { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--green-mid); }
+    .tx-body { padding: 20px; }
+    .tx-merchant { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .tx-icon { width: 48px; height: 48px; background: var(--green-pale); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tx-icon svg { width: 24px; height: 24px; color: var(--green-mid); }
+    .tx-name { font-weight: 600; font-size: 17px; margin-bottom: 2px; }
+    .tx-category { font-size: 13px; color: var(--text-light); }
+    .tx-amount-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-top: 1px solid #F2F2F2; }
+    .tx-label { font-size: 14px; color: var(--text-mid); }
+    .tx-value { font-size: 16px; font-weight: 600; }
+    .custom-section { padding: 20px; border-top: 1px solid #F0F0F0; }
+    .custom-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-light); margin-bottom: 10px; }
+    .input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .input-group { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .input-group label { font-size: 11px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+    .input-group input, .input-group select { padding: 12px 14px; border: 1.5px solid #E4E4E4; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text); background: white; transition: border-color 0.2s; width: 100%; }
+    .input-group input:focus, .input-group select:focus { outline: none; border-color: var(--green-light); }
+    .input-group input::placeholder { color: #CCC; }
+    .donation-section { padding: 0 20px 20px; }
+    .donation-options { display: flex; gap: 8px; margin-bottom: 16px; }
+    .donation-opt { flex: 1; padding: 14px 8px; background: var(--green-bg); border: 2px solid transparent; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .donation-opt:hover { border-color: var(--green-pale); }
+    .donation-opt.active { border-color: var(--green-mid); background: white; box-shadow: 0 2px 8px rgba(45,106,79,0.15); }
+    .donation-opt-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-bottom: 4px; }
+    .donation-opt-amount { font-size: 20px; font-weight: 700; color: var(--green-dark); }
+    .donation-opt-desc { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+    .charity-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--green-bg); border-radius: 12px; margin-bottom: 16px; }
+    .charity-icon { width: 36px; height: 36px; background: var(--green-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .charity-icon svg { width: 18px; height: 18px; color: white; }
+    .charity-name { font-weight: 600; font-size: 14px; }
+    .charity-type { font-size: 12px; color: var(--text-light); }
+    .btn-donate { width: 100%; padding: 18px; background: var(--gold); color: var(--green-deep); border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
+    .btn-donate:hover { background: var(--gold-hover); }
+    .btn-donate:active { transform: scale(0.98); }
+    .btn-donate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .success-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px; }
+    .success-ring { width: 88px; height: 88px; border-radius: 50%; background: var(--green-pale); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .success-ring svg { width: 40px; height: 40px; color: var(--green-mid); }
+    .success-amount { font-family: 'DM Serif Display', serif; font-size: 44px; color: var(--green-dark); margin-bottom: 8px; animation: fadeUp 0.4s ease 0.15s both; }
+    .success-text { font-size: 16px; color: var(--text-mid); line-height: 1.6; margin-bottom: 8px; animation: fadeUp 0.4s ease 0.25s both; }
+    .success-text strong { color: var(--green-dark); }
+    .success-id { font-family: monospace; font-size: 11px; color: #BBB; word-break: break-all; max-width: 320px; margin-top: 16px; padding: 12px 16px; background: #F5F5F5; border-radius: 8px; animation: fadeUp 0.4s ease 0.35s both; }
+    .success-stripe-note { margin-top: 24px; padding: 16px 20px; background: white; border-radius: 12px; border: 1px solid #E8E8E8; font-size: 13px; color: var(--text-mid); line-height: 1.6; max-width: 360px; animation: fadeUp 0.4s ease 0.45s both; }
+    .success-stripe-note strong { color: var(--green-dark); }
+    .btn-reset { margin-top: 24px; padding: 14px 32px; background: var(--green-bg); color: var(--green-mid); border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; animation: fadeUp 0.4s ease 0.55s both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .error-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--red); color: white; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 500; z-index: 100; box-shadow: 0 4px 20px rgba(220,53,69,0.3); animation: slideUp 0.3s ease; max-width: calc(100% - 40px); text-align: center; }
+    @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+    .footer { text-align: center; padding: 20px 0 32px; margin-top: auto; }
+    .footer-tagline { font-size: 13px; color: #CCC; font-style: italic; }
+    .footer-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 6px 12px; background: #F5F5F5; border-radius: 8px; font-size: 11px; color: #AAA; font-weight: 500; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar"><div class="topbar-dot"></div><span>Live Demo</span></div>
+  <div id="main-screen">
+    <div class="hero">
+      <div class="hero-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+          <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/>
+          <path d="M20 12c0-4.42-3.58-8-8-8s-8 3.58-8 8 3.58 8 8 8"/>
+          <path d="M16 16l2 2m0 0l2 2m-2-2l2-2m-2 2l-2 2"/>
+        </svg>
+      </div>
+      <h1>Silent Hand</h1>
+      <p>See how a restaurant visit becomes an act of giving</p>
+    </div>
+    <div class="tx-card">
+      <div class="tx-header"><div class="tx-header-dot"></div><span>Transaction Detected</span></div>
+      <div class="tx-body">
+        <div class="tx-merchant">
+          <div class="tx-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M3 7l1.4-2.8A2 2 0 016.2 3h11.6a2 2 0 011.8 1.2L21 7"/>
+              <path d="M3 7h18v2a4 4 0 01-4 4h0a4 4 0 01-4-4h0a4 4 0 01-4 4h0a4 4 0 01-4-4V7z"/>
+              <path d="M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6"/>
+            </svg>
+          </div>
+          <div>
+            <div class="tx-name" id="display-restaurant">Chipotle Mexican Grill</div>
+            <div class="tx-category" id="display-category">Fast Food &bull; <span id="display-date">Today</span></div>
+          </div>
+        </div>
+        <div class="tx-amount-row">
+          <span class="tx-label">Transaction Amount</span>
+          <span class="tx-value" id="display-bill">$23.47</span>
+        </div>
+      </div>
+      <div class="custom-section">
+        <div class="custom-label">Try your own transaction</div>
+        <div class="input-row">
+          <div class="input-group" style="flex:1.5">
+            <label>Restaurant</label>
+            <input type="text" id="input-restaurant" placeholder="e.g. Chick-fil-A" value="Chipotle Mexican Grill">
+          </div>
+          <div class="input-group" style="flex:1">
+            <label>Bill Amount</label>
+            <input type="number" id="input-amount" placeholder="0.00" value="23.47" step="0.01" min="1">
+          </div>
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label>Category</label>
+            <select id="input-category">
+              <option value="Fast Food">Fast Food</option>
+              <option value="Restaurant">Restaurant</option>
+              <option value="Coffee Shop">Coffee Shop</option>
+              <option value="Bakery">Bakery</option>
+              <option value="Pizza">Pizza</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Charity</label>
+            <select id="input-charity">
+              <option value="ICT Masjid Fund">ICT Masjid Fund</option>
+              <option value="Houston Food Bank">Houston Food Bank</option>
+              <option value="Islamic Relief USA">Islamic Relief USA</option>
+              <option value="Local School Fund">Local School Fund</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="donation-section">
+        <div class="donation-options">
+          <div class="donation-opt active" onclick="selectDonation('roundup')" id="opt-roundup">
+            <div class="donation-opt-label">Round Up</div>
+            <div class="donation-opt-amount" id="roundup-amount">$0.53</div>
+            <div class="donation-opt-desc">to nearest dollar</div>
+          </div>
+          <div class="donation-opt" onclick="selectDonation('percent5')" id="opt-percent5">
+            <div class="donation-opt-label">5%</div>
+            <div class="donation-opt-amount" id="percent5-amount">$1.17</div>
+            <div class="donation-opt-desc">of your bill</div>
+          </div>
+          <div class="donation-opt" onclick="selectDonation('flat')" id="opt-flat">
+            <div class="donation-opt-label">Flat</div>
+            <div class="donation-opt-amount">$1.00</div>
+            <div class="donation-opt-desc">per meal</div>
+          </div>
+        </div>
+        <div class="charity-row">
+          <div class="charity-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="charity-name" id="display-charity">ICT Masjid Fund</div>
+            <div class="charity-type">Verified 501(c)(3)</div>
+          </div>
+          <div style="margin-left:auto; font-size:20px; font-weight:700; color:var(--green-dark)" id="display-donation">$0.53</div>
+        </div>
+        <button class="btn-donate" id="btn-donate" onclick="donate()">
+          Donate $<span id="btn-amount">0.53</span> to <span id="btn-charity">ICT Masjid Fund</span>
+        </button>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="footer-tagline">Give quietly. Impact deeply.</div>
+      <div class="footer-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Payments secured by Stripe (test mode)
+      </div>
+    </div>
+  </div>
+
+  <div id="success-screen" class="success-screen hidden">
+    <div class="success-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <div class="success-amount" id="s-amount">$0.53</div>
+    <div class="success-text">
+      donated to <strong id="s-charity">ICT Masjid Fund</strong><br>
+      from your meal at <strong id="s-restaurant">Chipotle</strong>
+    </div>
+    <div class="success-id" id="s-payment-id">Loading...</div>
+    <div class="success-stripe-note">
+      <strong>This is a real Stripe charge.</strong><br>
+      Open your Stripe Dashboard &rarr; Payments to see it live. The metadata shows the restaurant, charity, and donation type.
+    </div>
+    <button class="btn-reset" onclick="reset()">Try Another Transaction</button>
+  </div>
+</div>
+<script>
+  const SUPABASE_URL = "https://atgcrfnbiktnwlkoqzuk.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0Z2NyZm5iaWt0bndsa29xenVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNTk0OTQsImV4cCI6MjA4OTkzNTQ5NH0.LgdtuBiKtytFloMS8CMxpMotnErgYBCO6AOq_tQnaoY";
+  const DONATE_ENDPOINT = `${SUPABASE_URL}/functions/v1/donate`;
+
+  let selectedType = "roundup";
+
+  const inputRestaurant = document.getElementById("input-restaurant");
+  const inputAmount = document.getElementById("input-amount");
+  const inputCategory = document.getElementById("input-category");
+  const inputCharity = document.getElementById("input-charity");
+
+  [inputRestaurant, inputAmount, inputCategory, inputCharity].forEach(el => {
+    el.addEventListener("input", updateDisplay);
+    el.addEventListener("change", updateDisplay);
+  });
+
+  function updateDisplay() {
+    const bill = parseFloat(inputAmount.value) || 0;
+    const restaurant = inputRestaurant.value || "Restaurant";
+    const category = inputCategory.value;
+    const charity = inputCharity.value;
+    document.getElementById("display-restaurant").textContent = restaurant;
+    document.getElementById("display-category").innerHTML = `${category} &bull; Today`;
+    document.getElementById("display-bill").textContent = `$${bill.toFixed(2)}`;
+    document.getElementById("display-charity").textContent = charity;
+    const roundUp = Math.ceil(bill) - bill;
+    const roundUpVal = roundUp < 0.01 ? 1.00 : roundUp;
+    const pct5 = bill * 0.05;
+    document.getElementById("roundup-amount").textContent = `$${roundUpVal.toFixed(2)}`;
+    document.getElementById("percent5-amount").textContent = `$${pct5.toFixed(2)}`;
+    updateSelectedAmount();
+  }
+  function selectDonation(type) {
+    selectedType = type;
+    document.querySelectorAll(".donation-opt").forEach(el => el.classList.remove("active"));
+    document.getElementById(`opt-${type}`).classList.add("active");
+    updateSelectedAmount();
+  }
+
+  function getSelectedAmount() {
+    const bill = parseFloat(inputAmount.value) || 0;
+    if (selectedType === "roundup") {
+      const r = Math.ceil(bill) - bill;
+      return r < 0.01 ? 1.00 : Math.round(r * 100) / 100;
+    }
+    if (selectedType === "percent5") return Math.round(bill * 0.05 * 100) / 100;
+    return 1.00;
+  }
+
+  function updateSelectedAmount() {
+    const amount = getSelectedAmount();
+    const charity = inputCharity.value;
+    document.getElementById("display-donation").textContent = `$${amount.toFixed(2)}`;
+    document.getElementById("btn-amount").textContent = amount.toFixed(2);
+    document.getElementById("btn-charity").textContent = charity;
+  }
+  async function donate() {
+    const btn = document.getElementById("btn-donate");
+    const amount = getSelectedAmount();
+    const restaurant = inputRestaurant.value || "Restaurant";
+    const charity = inputCharity.value;
+    const bill = parseFloat(inputAmount.value) || 0;
+    if (amount < 0.50) { showError("Minimum donation is $0.50. Try a larger bill amount."); return; }
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+    try {
+      const res = await fetch(DONATE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ amount, restaurant, charity, donationType: selectedType, originalBill: bill }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      if (!data.success) throw new Error("Payment failed: " + data.status);
+      document.getElementById("main-screen").classList.add("hidden");
+      document.getElementById("success-screen").classList.remove("hidden");
+      document.getElementById("s-amount").textContent = `$${data.amount.toFixed(2)}`;
+      document.getElementById("s-charity").textContent = data.charity;
+      document.getElementById("s-restaurant").textContent = data.restaurant;
+      document.getElementById("s-payment-id").textContent = `Stripe Payment ID: ${data.paymentId}`;
+    } catch (err) {
+      showError(err.message);
+      btn.disabled = false;
+      btn.textContent = `Donate $${amount.toFixed(2)} to ${charity}`;
+    }
+  }
+  function reset() {
+    document.getElementById("success-screen").classList.add("hidden");
+    document.getElementById("main-screen").classList.remove("hidden");
+    document.getElementById("btn-donate").disabled = false;
+    updateDisplay();
+  }
+
+  function showError(msg) {
+    const existing = document.querySelector(".error-toast");
+    if (existing) existing.remove();
+    const toast = document.createElement("div");
+    toast.className = "error-toast";
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  updateDisplay();
+</script>
+</body>
+</html>
